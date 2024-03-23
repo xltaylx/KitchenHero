@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenHero", "KitchenHero\KitchenHero\KitchenHero.csproj", "{63B24E74-DD3C-4FB1-B9DE-BD01904B14CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenHero.Client", "KitchenHero\KitchenHero.Client\KitchenHero.Client.csproj", "{F071EABE-8BEB-491F-94C3-95B6BCD40411}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2DCC3F2A-9FCF-4EC8-AD3B-F75465744FF7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{0836E60B-717E-4A45-8781-BB0B73EAC6CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthAPI", "Auth\AuthAPI\AuthAPI.csproj", "{0164B5B9-866F-4CCD-84DB-60F3026FEAD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModels", "Shared\DataModels\DataModels.csproj", "{99D002D4-B621-4375-A375-2F107E839744}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63B24E74-DD3C-4FB1-B9DE-BD01904B14CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63B24E74-DD3C-4FB1-B9DE-BD01904B14CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63B24E74-DD3C-4FB1-B9DE-BD01904B14CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63B24E74-DD3C-4FB1-B9DE-BD01904B14CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F071EABE-8BEB-491F-94C3-95B6BCD40411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F071EABE-8BEB-491F-94C3-95B6BCD40411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F071EABE-8BEB-491F-94C3-95B6BCD40411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F071EABE-8BEB-491F-94C3-95B6BCD40411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0164B5B9-866F-4CCD-84DB-60F3026FEAD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0164B5B9-866F-4CCD-84DB-60F3026FEAD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0164B5B9-866F-4CCD-84DB-60F3026FEAD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0164B5B9-866F-4CCD-84DB-60F3026FEAD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D002D4-B621-4375-A375-2F107E839744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D002D4-B621-4375-A375-2F107E839744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D002D4-B621-4375-A375-2F107E839744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99D002D4-B621-4375-A375-2F107E839744}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0164B5B9-866F-4CCD-84DB-60F3026FEAD6} = {0836E60B-717E-4A45-8781-BB0B73EAC6CF}
+		{99D002D4-B621-4375-A375-2F107E839744} = {2DCC3F2A-9FCF-4EC8-AD3B-F75465744FF7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2760B079-80F6-48CE-8243-E10BA9492BDF}
+	EndGlobalSection
+EndGlobal
