@@ -1,25 +1,15 @@
-﻿using DataModels.Models;
-using DataModels.Repositories;
+﻿using Data.Access.Repositories;
+using Data.Models;
+using Data.Models.Models.Auth;
 
 namespace AuthAPI.Models
 {
-  public interface IUserService
-{
-    Task<User> GetUserByUsername(string username);
-}
-
-public class UserService : IUserService
-{
-    private readonly IUserRepository _userRepository; // Interface for data access logic
-
-    public UserService(IUserRepository userRepository)
+    public interface IUserService
     {
-        _userRepository = userRepository;
+        Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByIdAsync(int id);
+        Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
+        Task UpdateUserAsync(User user);
+        Task<UserWithTokens?> CreateUserAsync(User user, string password);  // New method
     }
-
-    public async Task<User> GetUserByUsername(string username)
-    {
-        return await _userRepository.GetUserByUsername(username);
-    }
-}
 }
