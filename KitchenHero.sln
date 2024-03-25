@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Access", "Shared\Data.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3742E0D-8049-4F2C-9044-31B665F39209}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Access.Tests", "Data.Access.Tests\Data.Access.Tests.csproj", "{0A905B31-FC05-46F2-9C51-59D8ECBE46D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Access.Tests", "Tests\Data.Access.Tests\Data.Access.Tests.csproj", "{0A905B31-FC05-46F2-9C51-59D8ECBE46D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.API.Tests", "Auth.API.Tests\Auth.API.Tests.csproj", "{6BE71A31-20AA-4253-8AD2-1C9E75ED9773}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.API.Tests", "Tests\Auth.API.Tests\Auth.API.Tests.csproj", "{6BE71A31-20AA-4253-8AD2-1C9E75ED9773}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
