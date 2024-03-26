@@ -8,17 +8,16 @@ namespace DataModels.Models
 {
     public class Ingredient
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // Primary key for the database table
         public string Name { get; set; }
-        public string Unit { get; set; } // Unit of measurement (e.g., cup, gram)
-                                         // You can add other properties as needed (e.g., optional description)
+        public int Quantity { get; set; }
 
-          public ICollection<RecipeIngredient> Recipes { get; set; } // Now using RecipeIngredient
+        // Optional field to store image data
+        public byte[] ImageData { get; set; }
 
-
-        public Ingredient()
-        {
-            Recipes = new HashSet<RecipeIngredient>(); // Initialize the collection
-        }
+        public string Unit { get; set; } // Unit of measurement (e.g., "pcs", "kg", "oz")
+        public string Category { get; set; } // Category of the item (e.g., "Produce", "Bakery")
+        public DateTime? ExpiryDate { get; set; } // Optional expiry date for perishable items
+        public bool ScannedFlag { get; set; } // Flag to indicate if the item has been scanned
     }
 }

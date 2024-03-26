@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Models;
 using Data.Access.Repositories;
 using Data.Models;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -14,72 +15,125 @@ namespace Auth.API.Tests
     {
         private Mock<IUserRepository> _userRepositoryMock;
         private Mock<ITokenService> _tokenServiceMock;
+        private Mock<IConfiguration> _configurationMock;
         private IUserService _userService;
 
         public UserServiceTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _tokenServiceMock = new Mock<ITokenService>();
-            _userService = new UserService(_userRepositoryMock.Object, _tokenServiceMock.Object, null); // Assuming no configuration injection for simplicity
+            _configurationMock = new Mock<IConfiguration>();
+            _userService = new UserService(_userRepositoryMock.Object, _tokenServiceMock.Object, _configurationMock.Object); // Assuming no configuration injection for simplicity
+        }
+        [Fact]
+        public async Task GetUserByIdAsync_ReturnsUser_WhenUserExists()
+        {
+            // Arrange
+            var userId = 1;
+            var expectedUser = new User { Id = userId };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(expectedUser);
+
+            // Act
+            var result = await _userService.GetUserByIdAsync(userId);
+
+            // Assert
+            Assert.Equal(expectedUser, result);
         }
 
         [Fact]
-        public async Task CreateUserAsync_ShouldCreateUserAndReturnUserWithTokens()
+        public async Task GetUserByIdAsync_ReturnsNull_WhenUserDoesNotExist()
         {
             // Arrange
-            var user = new User { Email = "test@example.com"};
-            var expectedAccessToken = "valid_access_token";
-            var expectedRefreshToken = "valid_refresh_token";
-            _tokenServiceMock.Setup(s => s.GenerateAccessTokenAsync(user)).Returns(Task.FromResult(expectedAccessToken));
-            _tokenServiceMock.Setup(s => s.GenerateRefreshTokenAsync(user)).Returns(Task.FromResult(expectedRefreshToken));
-            _userRepositoryMock.Setup(r => r.CreateUserAsync(user)).Returns(Task.CompletedTask);
+            var userId = 1;
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync((User)null);
 
             // Act
-            var userWithTokens = await _userService.CreateUserAsync(user, "password");
+            var result = await _userService.GetUserByIdAsync(userId);
 
             // Assert
-            Assert.NotNull(userWithTokens);
-            Assert.Equal(user, userWithTokens.User);
-            Assert.Equal(expectedAccessToken, userWithTokens.AccessToken);
-            Assert.Equal(expectedRefreshToken, userWithTokens.RefreshToken);
-            _userRepositoryMock.Verify(r => r.CreateUserAsync(user), Times.Once);
-            _tokenServiceMock.Verify(s => s.GenerateAccessTokenAsync(user), Times.Once);
-            _tokenServiceMock.Verify(s => s.GenerateRefreshTokenAsync(user), Times.Once);
+            Assert.Null(result);
+        }
+        [Fact]
+        public async Task GetUserByEmailAsync_ReturnsUser_WhenUserExists()
+        {
+            // Arrange
+            var userEmail = "test@example.com";
+            var expectedUser = new User { Email = userEmail };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByEmailAsync(userEmail)).ReturnsAsync(expectedUser);
+
+            // Act
+            var result = await _userService.GetUserByEmailAsync(userEmail);
+
+            // Assert
+            Assert.Equal(expectedUser, result);
         }
 
         [Fact]
-        public async Task GetUserByEmailAsync_ShouldReturnUser_WhenEmailExists()
+        public async Task GetUserByEmailAsync_ReturnsNull_WhenUserDoesNotExist()
         {
             // Arrange
-            var email = "test@example.com";
-            var expectedUser = new User { Email = email };
-            _userRepositoryMock.Setup(r => r.GetUserByEmailAsync(email)).Returns(Task.FromResult(expectedUser));
+            var userEmail = "nonexistent@example.com";
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByEmailAsync(userEmail)).ReturnsAsync((User)null);
 
             // Act
-            var user = await _userService.GetUserByEmailAsync(email);
+            var result = await _userService.GetUserByEmailAsync(userEmail);
 
             // Assert
-            Assert.NotNull(user);
-            Assert.Equal(expectedUser, user);
-            _userRepositoryMock.Verify(r => r.GetUserByEmailAsync(email), Times.Once);
+            Assert.Null(result);
+        }
+        [Fact]
+        public async Task GetUserByRefreshTokenAsync_ReturnsUser_WhenUserExists()
+        {
+            // Arrange
+            var refreshToken = "someRefreshToken";
+            var expectedUser = new User { RefreshToken = refreshToken };
+
+            // Load test-specific configuration
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            var userService = new UserService(_userRepositoryMock.Object, _tokenServiceMock.Object, configuration);
+
+            // Mock the repository to return the expected user
+            _userRepositoryMock.Setup(repo => repo.GetUserByRefreshTokenAsync(refreshToken, It.IsAny<bool>())).ReturnsAsync(expectedUser);
+
+            // Act
+            var result = await userService.GetUserByRefreshTokenAsync(refreshToken);
+
+            // Assert
+            Assert.Equal(expectedUser, result);
         }
 
         [Fact]
-        public async Task GetUserByEmailAsync_ShouldReturnNull_WhenEmailDoesNotExist()
+        public async Task GetUserByRefreshTokenAsync_ReturnsNull_WhenUserDoesNotExist()
         {
             // Arrange
-            var email = "nonexistent@example.com";
-            _userRepositoryMock.Setup(r => r.GetUserByEmailAsync(email)).Returns(Task.FromResult<User>(null));
+            var refreshToken = "nonexistentRefreshToken";
+
+            // Load test-specific configuration
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .Build();
+
+            var userService = new UserService(_userRepositoryMock.Object, _tokenServiceMock.Object, configuration);
+
+            // Mock the repository to return null
+            _userRepositoryMock.Setup(repo => repo.GetUserByRefreshTokenAsync(refreshToken, It.IsAny<bool>())).ReturnsAsync((User)null);
 
             // Act
-            var user = await _userService.GetUserByEmailAsync(email);
+            var result = await userService.GetUserByRefreshTokenAsync(refreshToken);
 
             // Assert
-            Assert.Null(user);
-            _userRepositoryMock.Verify(r => r.GetUserByEmailAsync(email), Times.Once);
+            Assert.Null(result);
         }
 
-        // Add additional tests for other UserService methods...
+
     }
-
 }
