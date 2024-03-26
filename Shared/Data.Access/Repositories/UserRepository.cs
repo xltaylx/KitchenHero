@@ -1,4 +1,4 @@
-﻿using Data.Access.DbContext;
+﻿using Data.Access;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,10 +16,10 @@ namespace Data.Access.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AuthDbContext _context;
+        private readonly IDbContext _context;
         private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(AuthDbContext context, ILogger<UserRepository> logger)
+        public UserRepository(IDbContext context, ILogger<UserRepository> logger)
         {
             _context = context;
             _logger = logger;
@@ -31,8 +31,7 @@ namespace Data.Access.Repositories
             {
                 // Retrieve the user with their refresh token expiration
                 var user = await _context.Users
-                                   .Include(u => u.RefreshTokenExpiration) // Ensure expiration is included
-                                   .FirstOrDefaultAsync(u => u.Id == userId);
+                                   .FindAsync(userId);
 
                 // Return the user if found
                 return user;
@@ -43,13 +42,11 @@ namespace Data.Access.Repositories
                 throw; // Re-throw to allow higher-level exception handling
             }
         }
-
-
         public async Task<User> GetUserByEmailAsync(string email)
         {
             _logger.LogInformation("Retrieving user with email: {Email}", email);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FindAsync(email);
 
             if (user != null)
             {
@@ -62,19 +59,17 @@ namespace Data.Access.Repositories
 
             return user;
         }
-
         public async Task<User> GetUserByRefreshTokenAsync(string refreshToken, bool useHashedRefreshToken)
         {
             if (useHashedRefreshToken)
             {
-                return await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken) ?? null;
+                return await _context.Users.FindAsync(refreshToken) ?? null;
             }
             else
             {
-                return await _context.Users.FirstOrDefaultAsync(u => u.RefreshTokenHash == refreshToken) ?? null;
+                return await _context.Users.FindAsync(refreshToken) ?? null;
             }
         }
-
         public async Task UpdateUserAsync(User user)
         {
             _logger.LogInformation("Updating user with email: {email}", user.Email);
@@ -84,9 +79,14 @@ namespace Data.Access.Repositories
 
             _logger.LogInformation("User updated successfully: {email}", user.Email);
         }
-
         public async Task CreateUserAsync(User user)
         {
+            if (user == null)
+            {
+                _logger.LogError("User cannot be null.");
+                throw new ArgumentNullException(nameof(user), "User cannot be null.");
+            }
+
             _logger.LogInformation("Adding new user: {Email}", user.Email);
 
             await _context.Users.AddAsync(user);

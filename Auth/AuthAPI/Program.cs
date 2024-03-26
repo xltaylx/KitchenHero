@@ -1,4 +1,4 @@
-using Data.Access.DbContext;
+using Data.Access;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +14,7 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 
 // Register DbContext for user management (replace with your context name)
-builder.Services.AddDbContext<AuthDbContext>(options =>
+builder.Services.AddDbContext<Data.Access.DbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 // Configure JWT authentication
